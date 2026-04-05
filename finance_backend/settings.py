@@ -55,8 +55,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'finance_backend.wsgi.application'
 
 # Database
-# Locally: uses DATABASE_URL env var or falls back to local PostgreSQL
-# On Render: DATABASE_URL is automatically set by Render
+# Render sets DATABASE_URL automatically from the linked PostgreSQL instance.
+# For local dev, either set DATABASE_URL in .env or set individual DB_* vars.
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 if DATABASE_URL:
@@ -64,16 +64,14 @@ if DATABASE_URL:
         'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
 else:
-    # Local MySQL fallback (for local dev without .env)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME', 'zor'),
-            'USER': os.getenv('DB_USER', 'root'),
-            'PASSWORD': os.getenv('DB_PASSWORD', 'omar'),
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'finance'),
+            'USER': os.getenv('DB_USER', 'postgres'),
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
             'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '3306'),
-            'OPTIONS': {'charset': 'utf8mb4'},
+            'PORT': os.getenv('DB_PORT', '5432'),
         }
     }
 
